@@ -1,198 +1,313 @@
 <!DOCTYPE html>
 <html lang="uk">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
 <title>ibonarium flow</title>
 
 <style>
+
+/* ====================================== */
+/* RESET */
+/* ====================================== */
+
 *{
   margin:0;
   padding:0;
   box-sizing:border-box;
 }
 
-html{
-  scroll-behavior:smooth;
-}
-
-html,body{
+html,
+body{
   width:100%;
+  height:100%;
+  overflow:hidden; /* NO SCROLL */
   background:#000;
-  overflow-x:hidden;
-  overflow-y:auto;
   font-family:Arial,sans-serif;
 }
 
-/* ===== FIX AUTO JUMPS ===== */
+/* ====================================== */
+/* MAIN WRAPPER */
+/* ====================================== */
 
-body{
+.wrapper{
+
   position:relative;
-}
 
-/* ===== SECTIONS ===== */
-
-.section{
-  position:relative;
   width:100%;
-  overflow:hidden;
-  background:#000;
-}
-
-/* ===== IFRAMES ===== */
-
-.frame{
-  width:100%;
-  border:none;
-  display:block;
-  background:#000;
-}
-
-/* ===== PAGE HEIGHTS ===== */
-
-#tvFrame{
   height:100vh;
+
+  overflow:hidden;
+
+  background:#000;
+
 }
 
-#museumFrame{
-  height:2200px;
-}
+/* ====================================== */
+/* PAGES */
+/* ====================================== */
 
-/* ===== SOFT TRANSITION ===== */
+.page{
 
-.fade::after{
-  content:"";
   position:absolute;
-  left:0;
-  bottom:-1px;
-  width:100%;
-  height:120px;
-  pointer-events:none;
 
-  background:linear-gradient(
-    to bottom,
-    rgba(0,0,0,0),
-    rgba(0,0,0,0.45),
-    #000
-  );
+  inset:0;
+
+  width:100%;
+  height:100%;
+
+  opacity:0;
+
+  visibility:hidden;
+
+  transition:
+    opacity 0.6s ease,
+    visibility 0.6s ease;
+
+}
+
+/* ACTIVE PAGE */
+
+.page.active{
+
+  opacity:1;
+
+  visibility:visible;
 
   z-index:5;
+
 }
 
-/* ===== MOBILE ===== */
+/* ====================================== */
+/* EMBEDS */
+/* ====================================== */
+
+.page iframe{
+
+  position:absolute;
+
+  inset:0;
+
+  width:100%;
+  height:100%;
+
+  border:none;
+
+  background:#000;
+
+}
+
+/* ====================================== */
+/* SIDE PANEL */
+/* ====================================== */
+
+.side-panel{
+
+  position:fixed;
+
+  right:18px;
+  top:50%;
+
+  transform:translateY(-50%);
+
+  z-index:99999;
+
+  display:flex;
+  flex-direction:column;
+
+  gap:12px;
+
+}
+
+/* ====================================== */
+/* BUTTONS */
+/* ====================================== */
+
+.nav-btn{
+
+  width:42px;
+  height:42px;
+
+  border-radius:50%;
+
+  border:1px solid rgba(0,255,255,0.35);
+
+  background:rgba(0,0,0,0.72);
+
+  color:#8ffcff;
+
+  font-size:14px;
+  font-weight:bold;
+
+  cursor:pointer;
+
+  backdrop-filter:blur(8px);
+
+  transition:0.25s ease;
+
+}
+
+.nav-btn:hover{
+
+  transform:scale(1.08);
+
+  background:rgba(0,255,255,0.12);
+
+  box-shadow:
+    0 0 18px rgba(0,255,255,0.4);
+
+}
+
+/* ACTIVE BUTTON */
+
+.nav-btn.active{
+
+  background:rgba(0,255,255,0.18);
+
+  box-shadow:
+    0 0 20px rgba(0,255,255,0.45);
+
+}
+
+/* ====================================== */
+/* MOBILE */
+/* ====================================== */
 
 @media(max-width:900px){
 
-  #tvFrame{
+  .wrapper{
     height:100svh;
   }
 
-  #museumFrame{
-    height:2600px;
+  .side-panel{
+    right:10px;
   }
 
 }
+
 </style>
 </head>
 
 <body>
 
-<!-- ===== FIRST PAGE ===== -->
+<!-- ====================================== -->
+<!-- SIDE NAVIGATION -->
+<!-- ====================================== -->
 
-<section class="section fade">
+<div class="side-panel">
 
-  <iframe
-    id="tvFrame"
-    class="frame"
-    src="https://lavandaaudit.github.io/tv.2/"
-    loading="eager"
-    allow="autoplay; fullscreen"
-    allowfullscreen>
-  </iframe>
+  <button
+    id="btn1"
+    class="nav-btn active"
+    onclick="showPage(1)">
+    1
+  </button>
 
-</section>
+  <button
+    id="btn2"
+    class="nav-btn"
+    onclick="showPage(2)">
+    2
+  </button>
 
-<!-- ===== SECOND PAGE ===== -->
+</div>
 
-<section class="section">
+<!-- ====================================== -->
+<!-- WRAPPER -->
+<!-- ====================================== -->
 
-  <iframe
-    id="museumFrame"
-    class="frame"
-    src="https://lavandaaudit.github.io/history.musem.ibonarium/"
-    loading="lazy"
-    allowfullscreen>
-  </iframe>
+<div class="wrapper">
 
-</section>
+  <!-- PAGE 1 -->
+
+  <section
+    id="page1"
+    class="page active">
+
+    <iframe
+      src="https://lavandaaudit.github.io/tv.2/"
+      loading="eager"
+      allow="autoplay; fullscreen"
+      allowfullscreen>
+    </iframe>
+
+  </section>
+
+  <!-- PAGE 2 -->
+
+  <section
+    id="page2"
+    class="page">
+
+    <iframe
+      src="https://lavandaaudit.github.io/history.musem.ibonarium/"
+      loading="lazy"
+      allowfullscreen>
+    </iframe>
+
+  </section>
+
+</div>
 
 <script>
-/* ===== DISABLE PAGE RESTORE ===== */
 
-if ('scrollRestoration' in history) {
-  history.scrollRestoration = 'manual';
+/* ======================================
+   DISABLE SCROLL
+====================================== */
+
+document.body.style.overflow = 'hidden';
+
+window.scrollTo(0,0);
+
+/* ======================================
+   PAGE SWITCHER
+====================================== */
+
+const page1 = document.getElementById('page1');
+const page2 = document.getElementById('page2');
+
+const btn1 = document.getElementById('btn1');
+const btn2 = document.getElementById('btn2');
+
+function showPage(page){
+
+  /* remove active */
+
+  page1.classList.remove('active');
+  page2.classList.remove('active');
+
+  btn1.classList.remove('active');
+  btn2.classList.remove('active');
+
+  /* activate */
+
+  if(page === 1){
+
+    page1.classList.add('active');
+    btn1.classList.add('active');
+
+  }
+
+  if(page === 2){
+
+    page2.classList.add('active');
+    btn2.classList.add('active');
+
+  }
+
 }
 
-/* ===== ALWAYS OPEN FROM TOP ===== */
+/* ======================================
+   FORCE START PAGE 1
+====================================== */
 
 window.addEventListener('load', () => {
 
-  setTimeout(() => {
-    window.scrollTo({
-      top:0,
-      left:0,
-      behavior:'instant'
-    });
-  }, 10);
+  showPage(1);
 
 });
 
-/* ===== BLOCK AUTO SCROLL FROM IFRAMES ===== */
-
-window.addEventListener('focus', () => {
-  document.documentElement.scrollTop = window.pageYOffset;
-});
-
-/* ===== ADAPTIVE HEIGHT ===== */
-
-const museumFrame = document.getElementById("museumFrame");
-
-function adaptiveMuseumHeight(){
-
-  if(window.innerWidth < 900){
-    museumFrame.style.height = "2600px";
-  }else{
-    museumFrame.style.height = "2200px";
-  }
-
-}
-
-adaptiveMuseumHeight();
-
-window.addEventListener("resize", adaptiveMuseumHeight);
-
-/* ===== REMOVE AUTO VIDEO JUMPS ===== */
-
-/* 
-NO PARALLAX
-NO AUTO TRANSFORM
-NO AUTO POSITION CHANGES
-ONLY MANUAL USER SCROLL
-*/
-
-document.addEventListener("visibilitychange", () => {
-
-  if (!document.hidden) {
-
-    const current = window.scrollY;
-
-    requestAnimationFrame(() => {
-      window.scrollTo(0, current);
-    });
-
-  }
-
-});
 </script>
 
 </body>
