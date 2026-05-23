@@ -24,22 +24,23 @@ html,body{
   font-family:Arial,sans-serif;
 }
 
-/* ===== FIX START POSITION ===== */
+/* ===== FIX AUTO JUMPS ===== */
+
 body{
   position:relative;
 }
 
-/* ===== SECTION ===== */
+/* ===== SECTIONS ===== */
+
 .section{
   position:relative;
   width:100%;
-  display:flex;
-  justify-content:center;
-  align-items:flex-start;
   overflow:hidden;
+  background:#000;
 }
 
 /* ===== IFRAMES ===== */
+
 .frame{
   width:100%;
   border:none;
@@ -47,20 +48,17 @@ body{
   background:#000;
 }
 
-/* ===== FIRST PAGE ===== */
+/* ===== PAGE HEIGHTS ===== */
+
 #tvFrame{
   height:100vh;
 }
 
-/* ===== SECOND PAGE ===== */
 #museumFrame{
   height:2200px;
 }
 
 /* ===== SOFT TRANSITION ===== */
-.fade{
-  position:relative;
-}
 
 .fade::after{
   content:"";
@@ -70,16 +68,19 @@ body{
   width:100%;
   height:120px;
   pointer-events:none;
+
   background:linear-gradient(
     to bottom,
     rgba(0,0,0,0),
-    rgba(0,0,0,0.5),
+    rgba(0,0,0,0.45),
     #000
   );
+
   z-index:5;
 }
 
 /* ===== MOBILE ===== */
+
 @media(max-width:900px){
 
   #tvFrame{
@@ -97,18 +98,24 @@ body{
 <body>
 
 <!-- ===== FIRST PAGE ===== -->
+
 <section class="section fade">
+
   <iframe
     id="tvFrame"
     class="frame"
     src="https://lavandaaudit.github.io/tv.2/"
     loading="eager"
+    allow="autoplay; fullscreen"
     allowfullscreen>
   </iframe>
+
 </section>
 
 <!-- ===== SECOND PAGE ===== -->
+
 <section class="section">
+
   <iframe
     id="museumFrame"
     class="frame"
@@ -116,18 +123,35 @@ body{
     loading="lazy"
     allowfullscreen>
   </iframe>
+
 </section>
 
 <script>
-/* ===== ALWAYS START FROM TOP ===== */
+/* ===== DISABLE PAGE RESTORE ===== */
 
 if ('scrollRestoration' in history) {
   history.scrollRestoration = 'manual';
 }
 
-window.onload = () => {
-  window.scrollTo(0, 0);
-};
+/* ===== ALWAYS OPEN FROM TOP ===== */
+
+window.addEventListener('load', () => {
+
+  setTimeout(() => {
+    window.scrollTo({
+      top:0,
+      left:0,
+      behavior:'instant'
+    });
+  }, 10);
+
+});
+
+/* ===== BLOCK AUTO SCROLL FROM IFRAMES ===== */
+
+window.addEventListener('focus', () => {
+  document.documentElement.scrollTop = window.pageYOffset;
+});
 
 /* ===== ADAPTIVE HEIGHT ===== */
 
@@ -147,14 +171,26 @@ adaptiveMuseumHeight();
 
 window.addEventListener("resize", adaptiveMuseumHeight);
 
-/* ===== SOFT PARALLAX ===== */
+/* ===== REMOVE AUTO VIDEO JUMPS ===== */
 
-window.addEventListener("scroll",()=>{
+/* 
+NO PARALLAX
+NO AUTO TRANSFORM
+NO AUTO POSITION CHANGES
+ONLY MANUAL USER SCROLL
+*/
 
-  const scrollY = window.scrollY;
+document.addEventListener("visibilitychange", () => {
 
-  document.getElementById("tvFrame").style.transform =
-    `translateY(${scrollY * 0.02}px)`;
+  if (!document.hidden) {
+
+    const current = window.scrollY;
+
+    requestAnimationFrame(() => {
+      window.scrollTo(0, current);
+    });
+
+  }
 
 });
 </script>
